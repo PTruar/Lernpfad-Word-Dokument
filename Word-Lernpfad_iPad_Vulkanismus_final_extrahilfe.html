@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word auf dem iPad – Lernpfad Vulkanismus (mit Extra-Hilfe)</title>
+<style>
+:root{
+ --bg:#f5f8ff; --card:#ffffff; --line:#dbe4f0;
+ --text:#0f172a; --muted:#475569;
+ --accent:#2563eb;
+ --radius:18px; --shadow:0 10px 25px rgba(2,8,23,.08);
+}
+*{box-sizing:border-box}
+body{
+ margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+ background:linear-gradient(180deg,#f7faff,#eef3fb);
+ color:var(--text);line-height:1.45;
+}
+header{max-width:1200px;margin:0 auto;padding:20px 16px}
+h1{margin:0;font-size:28px}
+main{
+ max-width:1200px;margin:0 auto;padding:0 16px 28px;
+ display:grid;grid-template-columns:420px 1fr;gap:16px
+}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+.card{
+ background:var(--card);border:1px solid var(--line);
+ border-radius:var(--radius);box-shadow:var(--shadow)
+}
+.hd{
+ padding:14px;border-bottom:1px solid var(--line);
+ display:flex;justify-content:space-between;align-items:center
+}
+.bd{padding:14px}
+.steps{display:grid;gap:10px;max-height:65vh;overflow:auto}
+.step{
+ padding:12px;border:1px solid var(--line);border-radius:14px;
+ cursor:pointer;display:flex;gap:10px
+}
+.step.active{outline:3px solid rgba(37,99,235,.15)}
+.dot{
+ width:24px;height:24px;border-radius:999px;
+ background:#eef2ff;border:1px solid var(--line);
+ display:grid;place-items:center;font-weight:700;color:#1e40af
+}
+.btn{
+ background:var(--accent);color:white;border:none;
+ border-radius:12px;padding:10px 12px;font-weight:700
+}
+.btn.secondary{background:white;color:var(--text);border:1px solid var(--line)}
+.callout{
+ border:1px solid rgba(37,99,235,.3);
+ background:rgba(37,99,235,.06);
+ border-radius:14px;padding:12px;margin:10px 0
+}
+.counter{font-size:13px;color:var(--muted)}
+.checklist{display:grid;gap:8px}
+label{display:flex;gap:8px}
+textarea{
+ width:100%;min-height:120px;border-radius:12px;
+ border:1px solid var(--line);padding:8px
+}
+.footer{display:flex;justify-content:flex-end;margin-top:10px}
+details{
+ border:1px solid var(--line);
+ border-radius:14px;
+ padding:10px 12px;
+ background:#fff;
+ margin-top:10px;
+}
+summary{cursor:pointer;font-weight:700}
+.small{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Word auf dem iPad – Lernpfad „Vulkanismus“</h1>
+</header>
+
+<main>
+<section class="card">
+ <div class="hd"><strong>Schritte</strong></div>
+ <div class="bd"><div class="steps" id="steps"></div></div>
+</section>
+
+<section class="card">
+ <div class="hd">
+  <div>
+    <strong id="title">Aufgabe</strong><br>
+    <span class="counter" id="counter"></span>
+  </div>
+  <div>
+   <button class="btn secondary" onclick="prev()">◀</button>
+   <button class="btn" onclick="next()">▶</button>
+  </div>
+ </div>
+ <div class="bd" id="content"></div>
+</section>
+</main>
+
+<script>
+const topicTitle = "Der Vesuv – gefährlicher Vulkan bei Neapel";
+
+const text1 = "Der Vesuv ist ein Schichtvulkan in Italien. Er liegt bei Neapel und wurde durch den Ausbruch im Jahr 79 n. Chr. bekannt, bei dem Pompeji verschüttet wurde.";
+const text2 = "Vulkanismus entsteht häufig an Plattengrenzen. Dort steigt Magma aus dem Erdinneren auf und kann an der Erdoberfläche als Lava austreten.";
+const text3 = "Viele Menschen leben in Vulkangebieten, weil die Böden fruchtbar sind und es Arbeitsplätze gibt, obwohl Vulkane gefährlich sein können.";
+
+const tableText =
+`Vulkan\tVulkantyp\tLand\tAlter\tLetzter Ausbruch
+Vesuv\tSchichtvulkan\tItalien\tca. 25.000 Jahre\t1944
+Ätna\tSchichtvulkan\tItalien\tüber 500.000 Jahre\tsehr häufig
+Stromboli\tSchichtvulkan\tItalien\tüber 100.000 Jahre\tfast ständig
+Hekla\tZentralvulkan\tIsland\tca. 6.600 Jahre\t2000`;
+
+const steps = [
+{
+ t:"So arbeitest du mit diesem Lernpfad",
+ task:"Lies kurz, wie du mit diesem Lernpfad arbeitest.",
+ how:["Lies Aufgabe → Erklärung → mach es in Word → Häkchen → weiter."],
+ checks:["Ich weiß, wie ich arbeite."]
+},
+{
+ t:"Word öffnen",
+ task:"Öffne Microsoft Word auf deinem iPad.",
+ how:["Word-Symbol antippen → „Leeres Dokument“."],
+ checks:["Word ist geöffnet.","Leeres Dokument geöffnet."]
+},
+{
+ t:"Überschrift schreiben",
+ task:"Schreibe die Überschrift.",
+ how:["Oben ins Dokument tippen → Überschrift schreiben (oder kopieren)."],
+ checks:["Überschrift geschrieben."],
+ copy: topicTitle
+},
+{
+ t:"Überschrift formatieren",
+ task:"Mache die Überschrift groß und unterstrichen.",
+ how:["Überschrift markieren → A (Format) → Größe ca. 24 → Unterstreichen."],
+ checks:["Überschrift groß.","Überschrift unterstrichen."],
+ help:["Wenn du A (Format) nicht siehst: Suche nach „Start“ oder tippe auf „…“.","Wenn Unterstreichen fehlt: Im Schrift-Menü nach dem U-Symbol suchen."]
+},
+{
+ t:"Unterüberschrift 1",
+ task:"Schreibe „Lage und Grundwissen“.",
+ how:["Neue Zeile → Text schreiben oder kopieren."],
+ checks:["Unterüberschrift 1 da."],
+ copy:"Lage und Grundwissen"
+},
+{
+ t:"Text 1 einfügen",
+ task:"Füge den ersten Text ein.",
+ how:["Text kopieren → in Word einsetzen."],
+ checks:["Text 1 eingefügt."],
+ copy:text1
+},
+{
+ t:"Schriftart ändern",
+ task:"Ändere die Schriftart von Text 1.",
+ how:["Text 1 markieren → A (Format) → Schriftart → auswählen."],
+ extra:"Wähle: Times New Roman, Arial, Helvetica Neue oder Calibri.",
+ checks:["Schriftart geändert."],
+ help:["Wenn du den Text nicht markieren kannst: Doppelt tippen → Griffe ziehen.","Wenn du keine Schriftliste siehst: Im A-Menü nach „Schriftart“ suchen oder runter scrollen."]
+},
+{
+ t:"Blocksatz",
+ task:"Stelle Text 1 auf Blocksatz.",
+ how:["Text 1 markieren → A (Format) → Absatz → Blocksatz."],
+ checks:["Blocksatz eingestellt."],
+ help:["Blocksatz ist bei „Ausrichtung“ (Links/Mitte/Rechts/Blocksatz).","Wenn du Absatz nicht findest: Suche im A-Menü nach „Ausrichtung“ oder „Absatz“."]
+},
+{
+ t:"Unterüberschrift 2",
+ task:"Schreibe „Wie entsteht Vulkanismus?“.",
+ how:["Neue Zeile → Text schreiben oder kopieren."],
+ checks:["Unterüberschrift 2 da."],
+ copy:"Wie entsteht Vulkanismus?"
+},
+{
+ t:"Text 2 einfügen",
+ task:"Füge den zweiten Text ein.",
+ how:["Text kopieren → in Word einsetzen."],
+ checks:["Text 2 eingefügt."],
+ copy:text2
+},
+{
+ t:"Unterüberschrift 3",
+ task:"Schreibe „Warum wohnen Menschen in Vulkangebieten?“.",
+ how:["Neue Zeile → Text schreiben oder kopieren."],
+ checks:["Unterüberschrift 3 da."],
+ copy:"Warum wohnen Menschen in Vulkangebieten?"
+},
+{
+ t:"Text 3 einfügen",
+ task:"Füge den dritten Text ein.",
+ how:["Text kopieren → in Word einsetzen."],
+ checks:["Text 3 eingefügt."],
+ copy:text3
+},
+{
+ t:"Tabelle einfügen",
+ task:"Füge eine Tabelle mit 5 Spalten und 5 Zeilen ein.",
+ how:["Einfügen → Tabelle → 5 Spalten, 5 Zeilen."],
+ checks:["Tabelle eingefügt."],
+ help:["Wenn „Einfügen“ nicht sichtbar ist: Tippe auf „…“ und suche „Einfügen“.","Wenn du dich verklickst: Tabelle antippen → löschen → neu."]
+},
+{
+ t:"Tabelle ausfüllen",
+ task:"Fülle die Tabelle mit den vorgegebenen Daten.",
+ how:["Tabellendaten kopieren → in Word einfügen oder abschreiben."],
+ checks:["Tabelle vollständig ausgefüllt."],
+ copy: tableText,
+ help:["Wenn Einfügen nicht geht: Tippe in eine Zelle → tippen & halten → Einsetzen.","Wenn es nicht automatisch in die Tabelle passt: Dann abschreiben."]
+},
+{
+ t:"Kopfzeile & Seitenzahl",
+ task:"Füge Kopfzeile (Name – Gesellschaftslehre) und eine Seitenzahl ein.",
+ how:["Einfügen → Kopfzeile → Text schreiben. Dann Einfügen → Seitenzahl."],
+ checks:["Kopfzeile da.","Seitenzahl da."],
+ help:["Wenn du Kopfzeile nicht findest: Tippe auf „…“ und suche „Kopfzeile“.","Wenn du in der Kopfzeile „festhängst“: Tippe auf „Fertig“ oder tippe in den normalen Textbereich."]
+},
+{
+ t:"Speichern & PDF",
+ task:"Speichere das Dokument und erstelle eine PDF.",
+ how:["… → Speichern unter. Dann Teilen/… → Als PDF."],
+ checks:["Word-Datei gespeichert.","PDF erstellt."],
+ help:["Wenn „Als PDF“ fehlt: „Kopie senden“ → PDF.","Wenn du nicht weißt wohin speichern: Frage nach dem Klassenordner in der Dateien-App."]
+}
+];
+
+let i=0;
+function render(){
+ const s=steps[i];
+ document.getElementById("title").innerText=s.t;
+ document.getElementById("counter").innerText=(i+1)+" / "+steps.length;
+ document.getElementById("content").innerHTML=`
+  <div class="callout"><strong>Aufgabe:</strong> ${s.task}</div>
+  <strong>So geht’s:</strong>
+  <ol>${s.how.map(h=>"<li>"+h+"</li>").join("")}</ol>
+  ${s.extra?`<div class="callout"><strong>Hinweis:</strong> ${s.extra}</div>`:""}
+  ${s.copy?`<div class="callout"><strong>Inhalt zum Kopieren:</strong><textarea readonly>${s.copy}</textarea></div>`:""}
+  ${s.help?`
+    <details>
+      <summary>Extra-Hilfe</summary>
+      <ul>${s.help.map(h=>"<li>"+h+"</li>").join("")}</ul>
+      <div class="small">Wenn es trotzdem nicht klappt: Hand heben und kurz Hilfe holen.</div>
+    </details>
+  `:""}
+  <div class="checklist">
+   ${s.checks.map(c=>`<label><input type="checkbox"> ${c}</label>`).join("")}
+  </div>
+  <div class="footer"><button class="btn secondary">Erledigt</button></div>
+ `;
+ document.getElementById("steps").innerHTML=steps.map((x,idx)=>`
+  <div class="step ${idx===i?"active":""}" onclick="go(${idx})">
+   <div class="dot">${idx+1}</div><div>${x.t}</div>
+  </div>
+ `).join("");
+}
+function go(n){i=n;render()}
+function next(){if(i<steps.length-1){i++;render()}}
+function prev(){if(i>0){i--;render()}}
+render();
+</script>
+
+</body>
+</html>
